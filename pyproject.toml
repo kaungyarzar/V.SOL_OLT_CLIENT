@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "vsol_olt_client"
+version = "0.1.0"
+description = "V.SOL OLT Client Module"
+authors = ["Kaung Yar Zar <kaung.yarzar@frontiir.net>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "vsol_olt_client", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+paramiko-expect = "^0.3.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
