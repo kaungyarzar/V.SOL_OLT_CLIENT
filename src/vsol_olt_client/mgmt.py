@@ -51,3 +51,25 @@ def get_running_config(conn: Connection) -> str:
     _, res = conn.expect([p])
     config = res.strip(cmd).strip(p)
     return config
+
+def get_version(conn: Connection) -> dict:
+    enable_conf_mode(conn)
+    p = conn.get_shell_prompt()
+    cmd = 'show version'
+    conn.send(cmd)
+    _, res = conn.expect([p])
+    patterns = {
+        "serial_number": r"Olt Serial Number:\s+(\S+)",
+        "device_model": r"Olt Device Model:\s+(\S+)",
+        "hardware_version": r"Hardware Version:\s+(\S+)",
+        "software_version": r"Software Version:\s+(\S+)",
+        "software_created_time": r"Software Created Time:\s+(.*)"
+    }
+    # Parse the information using regex
+    parsed_results = {}
+    for key, pattern in patterns.items():
+        match = re.search(pattern, res)
+        if match:
+            parsed_results[key] = match.group(1)
+    
+    return parsed_results
