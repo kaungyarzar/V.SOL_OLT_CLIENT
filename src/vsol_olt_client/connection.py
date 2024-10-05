@@ -59,6 +59,10 @@ class TNET(Connection):
         self.send(self.password)
         p, _ = self.expect(self.LOGIN_P)
         if p!=2: raise ValueError("Invalid password.")
+
+        # disable paging
+        self.send('terminal length 0')
+        self.expect(self.LOGIN_P)
     
     def logout(self):
         if not self.conn:
@@ -68,17 +72,14 @@ class TNET(Connection):
         self.conn = None
 
     def get_shell_prompt(self):
-        self.login()
         self.send('')
         _, res = self.expect(self.SHELL_P)
         return res.strip('\r\n')
 
     def send(self, msg: str):
-        self.login()
         self.conn.write(self._encode(msg)+b'\n')
 
     def expect(self, match: list, timeout: float = 5):
-        self.login()
         match = [ self._encode(each) for each in match ]
         pos, _, res = self.conn.expect(match, timeout)
         return (pos, self._decode(res))
@@ -123,6 +124,11 @@ class SSH(Connection):
         p, _ = self.expect(self.LOGIN_P)
         if p!=2: raise ValueError("Invalid password.")
 
+        # disable paging
+        self.send('terminal length 0')
+        self.expect(self.LOGIN_P)
+
+
     def logout(self):
         if self.conn:
             self.conn.close()
@@ -132,7 +138,6 @@ class SSH(Connection):
             self.transport = None
 
     def get_shell_prompt(self):
-        self.login()
         self.send('')
         _, res = self.expect(self.SHELL_P)
         return res.strip('\r\n')
@@ -151,7 +156,7 @@ class SSH(Connection):
         res = ""
         while True:
             if self.shell.recv_ready():
-                raw = self.shell.recv(1024)
+                raw = self.shell.recv(4096)
                 res += self._decode(raw)
             time.sleep(0.01)
             for i, p in enumerate(match):

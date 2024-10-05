@@ -23,6 +23,7 @@ def enable_alt_mode(conn: Connection):
         conn.send('enable')
         conn.expect(['Password: '])
         conn.send(conn.password)
+        conn.expect([CLI_MODE.ALT.value])
 
 def enable_conf_mode(conn: Connection):
     p = conn.get_shell_prompt()
@@ -38,20 +39,15 @@ def enable_conf_mode(conn: Connection):
     conn.send('configure terminal')
     conn.expect([CLI_MODE.CONF.value])
 
-def disable_paging(conn: Connection):
-    enable_pri_mode(conn)
-    conn.send('terminal length 0')
-    conn.expect(CLI_MODE.PRI.value)
-
 def get_hostname(conn: Connection) -> str:
     p = conn.get_shell_prompt()
     return re.sub('> |\(config\)# |# ','', p)
 
 def get_running_config(conn: Connection) -> str:
-    disable_paging(conn)
     enable_alt_mode(conn)
-    conn.send('show running-config')
-    _, res = conn.expect([CLI_MODE.ALT.value])
-    return res
-
-
+    p = conn.get_shell_prompt()
+    cmd = 'show running-config'
+    conn.send(cmd)
+    _, res = conn.expect([p])
+    config = res.strip(cmd).strip(p)
+    return config
