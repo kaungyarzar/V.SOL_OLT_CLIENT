@@ -9,7 +9,7 @@ packages = [{include = "vsol_olt_client", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-paramiko-expect = "^0.3.5"
+paramiko = "^3.5.0"
 
 [build-system]
 requires = ["poetry-core"]
