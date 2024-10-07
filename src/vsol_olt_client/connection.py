@@ -44,7 +44,7 @@ class TNET(Connection):
         self._decode = lambda x: x.decode(self._codec)
     
     def _isalive(self):
-        return (self.conn and self.conn.eof)
+        return (self.conn and self.conn.eof!=True)
 
     def login(self):
         if self._isalive():
