@@ -11,6 +11,29 @@ packages = [{include = "vsol_olt_client", from = "src"}]
 python = "^3.8"
 paramiko = "^3.5.0"
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+isort = "^5.13.2"
+pre-commit = "^2.12.0"
+
+[tool.black]
+line-length = 88  # Black's default line length
+include = '\.pyi?$'  # Include Python files
+exclude = '''
+/(
+    \.git
+    |\.tox
+    |\.venv
+    |build
+    |dist
+)/
+'''
+
+[tool.isort]
+profile = "black"  # Use the black profile for compatibility
+line_length = 88  # Match Black's line length
+known_first_party = ["vsol_olt_client"]  # Replace with your package name if needed
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

@@ -1,23 +1,23 @@
-from vsol_olt_client.connection import TNET, SSH
-from vsol_olt_client.mgmt import (
-    get_hostname, get_running_config,enable_pri_mode,enable_alt_mode,
-    enable_conf_mode
-)
+from vsol_olt_client.client import PROTO, VOLTClient
+from vsol_olt_client.commands import get_hostname, get_running_config, get_versions
 
-host = 'localhost'
-username = 'admin'
-password = 'admin'
+host = "localhost"
+username = "frontiir"
+password = "frontiir"
 
-conn = TNET(host, username, password)
-# conn = SSH(host, username, password)
-conn.login()
-print("hostname: ", get_hostname(conn))
-enable_alt_mode(conn)
-print("current prompt: ", conn.get_shell_prompt())
-enable_conf_mode(conn)
-print("current prompt: ", conn.get_shell_prompt())
-enable_pri_mode(conn)
-print("current prompt: ", conn.get_shell_prompt())
-print("running config >>>")
-print(get_running_config(conn))
-conn.logout()
+client = VOLTClient(host, username, password, proto=PROTO.ssh)
+print("Client: ", id(client.mutex))
+client2 = VOLTClient(host, username, password, proto=PROTO.telnet)
+print("Client2: ", id(client2.mutex))
+client.connect()
+
+print("Client: ", get_hostname(client))
+print("Client: ", get_versions(client))
+
+client2.connect()
+
+print("Client: ", get_hostname(client2))
+print("Client: ", get_versions(client2))
+# print(get_running_config(client))
+client.disconnect()
+client2.disconnect()
