@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vsol_olt_client"
-version = "0.1.0"
+version = "1.0.0"
 description = "V.SOL OLT Client Module"
 authors = ["Kaung Yar Zar <kaung.yarzar@frontiir.net>"]
 license = "MIT"
