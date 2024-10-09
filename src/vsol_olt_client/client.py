@@ -1,6 +1,9 @@
+import asyncio
+import functools
 import threading
 import time
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from typing import Union
 
@@ -119,4 +122,5 @@ class VOLTClient:
             _, output = self.shell.expect([CLI_MODE.CONF.value], timeout=timeout)
         finally:
             self.mutex.release()
+
         return output
