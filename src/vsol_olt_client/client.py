@@ -91,8 +91,8 @@ class VOLTClient:
     def send_pri_cmd(self, msg: str, timeout: float = 5):
         if msg in ["enable", "exit"]:
             raise ValueError("Not allowed in pri mode.")
+        self.mutex.acquire()
         try:
-            self.mutex.acquire()
             self.__enable_pri_mode()
             self.shell.send(msg)
             _, output = self.shell.expect([CLI_MODE.PRI.value], timeout=timeout)
@@ -103,8 +103,8 @@ class VOLTClient:
     def send_alt_cmd(self, msg: str, timeout: float = 5):
         if msg in ["configure terminal", "exit"]:
             raise ValueError("Not allowed in alt mode.")
+        self.mutex.acquire()
         try:
-            self.mutex.acquire()
             self.__enable_alt_mode()
             self.shell.send(msg)
             _, output = self.shell.expect([CLI_MODE.ALT.value], timeout=timeout)
@@ -115,8 +115,8 @@ class VOLTClient:
     def send_conf_cmd(self, msg: str, timeout: float = 5):
         if msg in ["exit"]:
             raise ValueError("Not allowed in config mode.")
+        self.mutex.acquire()
         try:
-            self.mutex.acquire()
             self.__enable_conf_mode()
             self.shell.send(msg)
             _, output = self.shell.expect([CLI_MODE.CONF.value], timeout=timeout)
